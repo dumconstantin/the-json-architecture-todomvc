@@ -1,7 +1,12 @@
-let a = R.curry((msg, x) => {
-      console.log(msg, x)
-      return x
-})
+(function () {
 
-module.exports = a
+  let helpers = {}
 
+  helpers.log = R.curry((msg, x) => {
+    console.log(msg, x)
+    return x
+  })
+
+  window.helpers = helpers
+
+}())
