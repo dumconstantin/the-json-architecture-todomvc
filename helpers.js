@@ -1,11 +1,7 @@
-(function () {
-  let api = {}
-
-  api.log = R.curry((msg, x) => {
+let a = R.curry((msg, x) => {
       console.log(msg, x)
       return x
-  })
+})
 
-  return api
+module.exports = a
 
-}())
