@@ -46,15 +46,18 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.modelUiSchema = undefined;
+
 	var _modelUiSchema = __webpack_require__(1);
 
 	var _modelUiSchema2 = _interopRequireDefault(_modelUiSchema);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	module.exports = {
-	  modelUiSchema: _modelUiSchema2.default
-	};
+	exports.modelUiSchema = _modelUiSchema2.default;
 
 /***/ },
 /* 1 */
