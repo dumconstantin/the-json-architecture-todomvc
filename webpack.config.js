@@ -1,7 +1,17 @@
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: __dirname + '/src/bundle.js',
+  entry: {
+    server: [
+      `webpack-dev-server/client?http://localhost:3000`,
+      'webpack/hot/dev-server'
+    ],
+    app: [__dirname + '/src/bundle.js'],
+    vendor: ['ramda']
+  },
+  devtool: '#source-map',
+  filename: __filename,
   stats: {
     colors: true,
     modules: true,
@@ -9,23 +19,60 @@ module.exports = {
     errorDetails: true
   },
   output: {
+    filename: '[name].js',
     path: `${__dirname}/build`,
-    filename: 'bundle.js',
-    libraryTarget: 'var',
-    library: 'jsontodomvc'
+    pathinfo: true,
+    publicPath: '/'
   },
-  resolveLoader: {
-    modulesDirectories: [__dirname + '/../../', 'node_modules']
+  devServer: {
+    contentBase: __dirname + '/build',
+    historyApiFallback: true,
+    hot: true,
+    inline: true,
+    progress: true,
+    stats: 'errors-only',
+    port: '3000',
+    host: 'localhost'
   },
+  resolve: {
+    root: [
+      __dirname + '/src'
+    ],
+    modulesDirectories: [
+      'node_modules'
+    ],
+    alias: {
+      lib: __dirname + '/src/lib',
+      schema: __dirname + '/src/schema'
+    },
+    extensions: ['', '.js', '.yaml']
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+        inject: false,
+        template: __dirname + '/src/assets/index.ejs',
+        mobile: true,
+        baseHref: 'localhost',
+        appMountId: 'app',
+        devServer: 'http://localhost:3000',
+        title: 'The JSON Architecture TodoMVC demo',
+        hash: true
+      })
+  ],
   module: {
     noParse: [
       'ramda'
+    ],
+    preLoaders: [
+      { test: /\.yml|\.yaml$/, exclude: /node_modules/, loader: 'json-loader!yaml-loader' }
     ],
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel' ,
         query: { presets: ['es2015'] }
       },
       { test: /\.js|\.tag$/, exclude: /node_modules/, loader: 'ramda-loader' }
+    
     ]
   }
 }

@@ -1,0 +1,11 @@
+
+form:
+  input:
+    data: true
+    type: text
+
+nav:
+  tab:
+    data: true
+    type: button
+    default: 'all'
