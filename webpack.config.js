@@ -7,7 +7,7 @@ module.exports = {
       `webpack-dev-server/client?http://localhost:3000`,
       'webpack/hot/dev-server'
     ],
-    app: [__dirname + '/src/bundle.js'],
+    app: [__dirname + '/src/entry.js'],
     vendor: ['ramda']
   },
   devtool: '#source-map',
@@ -45,9 +45,12 @@ module.exports = {
       lib: __dirname + '/src/lib',
       schema: __dirname + '/src/schema'
     },
-    extensions: ['', '.js', '.yaml']
+    extensions: ['', '.js', '.yaml', '.tag']
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      riot: 'riot'
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
         inject: false,
@@ -62,7 +65,9 @@ module.exports = {
   ],
   module: {
     noParse: [
-      'ramda'
+      /^riot$/,
+      /^kefir$/
+      /^ramda$/
     ],
     preLoaders: [
       { test: /\.yml|\.yaml$/, exclude: /node_modules/, loader: 'json-loader!yaml-loader' }
@@ -71,8 +76,8 @@ module.exports = {
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel' ,
         query: { presets: ['es2015'] }
       },
-      { test: /\.js|\.tag$/, exclude: /node_modules/, loader: 'ramda-loader' }
-    
+      { test: /\.js|\.tag$/, exclude: /node_modules/, loader: 'ramda-loader' },
+      { test: /\.tag$/, exclude: exclude, loader: 'tag' }
     ]
   }
 }
