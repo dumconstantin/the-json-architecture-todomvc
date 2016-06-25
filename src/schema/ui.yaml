@@ -1,11 +1,27 @@
 
 form:
-  input:
+  newTodo:
     data: true
     type: text
 
-nav:
-  tab:
+todos:
+  toggle:
     data: true
     type: button
-    default: 'all'
+  toggleAll:
+    data: true
+    type: boolean
+    default: false
+  destroy:
+    data: true
+    type: button
+  edit:
+    data: true
+    type: button
+  clearCompleted:
+    data: true
+    type: button
+  filter:
+    data: true
+    type: button
+    default: all

@@ -1,26 +1,8 @@
-import * as Kefir from 'kefir'
-import schema from 'lib/schema'
-import makeState from 'lib/makeState'
-import uiPatches from 'lib/uiPatches'
-import uiSchema from 'lib/uiSchema'
-import app from './app'
+import './app.tag'
+import app from './app.js'
 
-const state = makeState(schema)
+baobabJsonEditor(app.state.tree)
 
-const patches = Kefir.merge([uiPatches])
-
-patches.onAny(state)
-
-
-
-
-
-
-
-
-
-
-
-
+riot.mount('#app', 'app')
 
 module.hot.accept()

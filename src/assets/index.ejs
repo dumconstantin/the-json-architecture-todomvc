@@ -21,8 +21,8 @@
   <link rel="icon" href="img/icon.png">
   <% } %>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/css/framework7.ios.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/css/framework7.ios.colors.css">
+      <link href="https://rawgit.com/tastejs/todomvc-app-css/master/index.css" rel="stylesheet" />
+    <link href="https://rawgit.com/tastejs/todomvc-common/master/base.css" rel="stylesheet" />
 
   <% for (var css in htmlWebpackPlugin.files.css) { %>
   <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
@@ -62,8 +62,6 @@
 </script>
 <% } %>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.4.2/js/framework7.js"></script>
-<script src="https://use.fontawesome.com/b6bbc00986.js"></script>
 
 <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
 <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
@@ -90,5 +88,9 @@
   <% } %>
 </script>
 <% } %>
+
+    <script type="text/javascript" src="https://rawgit.com/tastejs/todomvc-common/master/base.js"></script>
+
+
 </body>
 </html>

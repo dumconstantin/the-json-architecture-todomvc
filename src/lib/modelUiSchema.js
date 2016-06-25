@@ -24,6 +24,9 @@ const createData = curry((obj, acc, x) => {
       case 'modal':
         value.type = 'array'
         break
+      case 'boolean':
+        value.type = 'boolean'
+        break
     }
 
     acc[x] = {

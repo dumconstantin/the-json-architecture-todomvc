@@ -8,7 +8,14 @@ module.exports = {
       'webpack/hot/dev-server'
     ],
     app: [__dirname + '/src/entry.js'],
-    vendor: ['ramda']
+    vendor: [
+      'jquery',
+      'riot',
+      'kefir',
+      'ramda',
+      'baobab',
+      'json-patch-utils'
+    ]
   },
   devtool: '#source-map',
   filename: __filename,
@@ -65,9 +72,12 @@ module.exports = {
   ],
   module: {
     noParse: [
+      /^jquery$/,
       /^riot$/,
-      /^kefir$/
-      /^ramda$/
+      /^kefir$/,
+      /^baobab$/,
+      /^ramda$/,
+      /^json-patch-utils$/
     ],
     preLoaders: [
       { test: /\.yml|\.yaml$/, exclude: /node_modules/, loader: 'json-loader!yaml-loader' }
@@ -76,8 +86,8 @@ module.exports = {
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel' ,
         query: { presets: ['es2015'] }
       },
-      { test: /\.js|\.tag$/, exclude: /node_modules/, loader: 'ramda-loader' },
-      { test: /\.tag$/, exclude: exclude, loader: 'tag' }
+      { test: /\.js|\.tag$/, exclude: /node_modules/, loader: 'ramda-loader?debug=true' },
+      { test: /\.tag$/, exclude: /node_modules/, loader: 'tag' }
     ]
   }
 }

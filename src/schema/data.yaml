@@ -4,12 +4,17 @@ properties:
 
   todos:
     type: object
-    patternProperties:
-      ^([a-zA-Z0-9]+)$:
+    properties:
+      data:
         type: object
-        properties:
-          name:
-            type: string
-          completed:
-            type: boolean
-        required: [name, completed]
+        patternProperties:
+          ^([a-zA-Z0-9]+)$:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              completed:
+                type: boolean
+            required: [name, completed]

@@ -1,11 +1,10 @@
 import modelUiSchema from 'lib/modelUiSchema'
+import ui from 'schema/ui'
+import data from 'schema/data'
 import objectMerge from 'object-merge'
 import { derefSchema } from 'json-patch-utils'
 
-const makeSchema = x => {
-  let schema = objectMerge(x.data, modelUiSchema(x.ui))
-  schema = derefSchema(schema)
-  return schema
-}
+let schema = objectMerge(data, modelUiSchema(ui))
+schema = derefSchema(schema)
 
-export default makeSchema
+export default schema

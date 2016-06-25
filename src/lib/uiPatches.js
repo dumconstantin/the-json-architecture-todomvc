@@ -9,8 +9,10 @@ import schema from 'lib/schema'
 const patches = Kefir.merge([
     domOn('click', 'a[data-path]'),
     domOn('change', 'input[data-path]'),
-    domOn('change', 'select[data-path]')
+    domOn('change', 'select[data-path]'),
+    domOn('click', 'button[data-path]')
   ])
+  .map(preventDefault)
   .map(bubbleTo('[data-path]'))
   .map(x => ({
     path: $(x).attr('data-path'),
@@ -28,9 +30,12 @@ const patches = Kefir.merge([
 
     let valType = path(schemaPath, schema)
 
+    console.log(valType, schema, schemaPath)
     if (valType) {
       if ("number" === valType) {
         x.value = defaultTo('', parseFloat(x.value))
+      } else if ('boolean' === valType) {
+        x.value = Boolean(x.value)
       }
     }
 
