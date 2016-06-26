@@ -27,6 +27,9 @@ const createData = curry((obj, acc, x) => {
       case 'boolean':
         value.type = 'boolean'
         break
+      case 'string':
+        value.type = 'string, null'
+        break
     }
 
     acc[x] = {

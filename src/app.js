@@ -1,10 +1,11 @@
 import * as Kefir from 'kefir'
 // import { makeSteate, uiSchema, uiPatches, schema, onUpdate } from 'lib'
 import { createPatch as patch, dynamicNode as node } from 'json-patch-utils'
-import state from 'lib/state'
+import { on, get, default as state } from 'lib/state'
 import randomId from 'lib/randomId'
 import onUpdate from 'lib/onUpdate'
 import uiPatches from 'lib/uiPatches'
+import ui from 'lib/uiSchema'
 import log from 'lib/log'
 
 window.state = state
@@ -18,43 +19,59 @@ state.dynamicNodes({
   todos: {
     all: node(['/todos/data'], values),
     active: node(['/todos/all'], filter(propEq('completed', false))),
-    completed: node(['/todos/all'], filter(propEq('completed', true)))
+    completed: node(['/todos/all'], filter(propEq('completed', true))),
+    isCompleted: node(['/todos/active'], isEmpty),
+    editing: node(['/todos/all'], find(propEq('editing', true)))
   }
 })
 
-const newTodo = state.on('/ui/form/data/newTodo/value')
+const newTodo = on('/ui/form/data/newTodo/value')
   .filter(pipe(isEmpty, not))
   .map(x => ({
     id: randomId(),
     title: x,
-    completed: false
+    completed: false,
+    editing: false
   }))
   .map(x => [
     patch('add', `/todos/data/${x.id}`, x),
     patch('replace', '/ui/form/data/newTodo/value', '')
   ])
 
-const destroyTodo = state.on('/ui/todos/data/destroy/value')
+const destroyTodo = on('/ui/todos/data/destroy/value')
   .map(x => patch('remove', `/todos/data/${x}`, null))
 
-const toggleTodo = state.on('/ui/todos/data/toggle')
+const toggleTodo = on('/ui/todos/data/toggle')
   .filter(propSatisfies(pipe(isNil, not), 'value'))
   .map(x => `/todos/data/${x.value}/completed`)
-  .map(x => patch('replace', x, not(state.get(x))))
+  .map(x => patch('replace', x, not(get(x))))
 
-const toggleAll = state.on('/ui/todos/data/toggleAll/value')
+const toggleAll = on('/ui/todos/data/toggleAll')
+  .map(() => get('/todos/all'))
+  .map(map(x => patch('replace', `/todos/data/${x.id}/completed`, not(get('/todos/isCompleted')))))
 
+const editTitle = on(`${ui.todos.edit.path}/timestamp`)
+  .map(() => get(`${ui.todos.edit.path}/value`))
+  .map(x => patch('replace', `/todos/data/${x}/editing`, true))
 
-const clearCompleted = state.on('/ui/todos/data/clearCompleted/timestamp')
-  .map(x => map(prop('id'), state.get('/todos/completed')))
-  .flatten()
-  .map(x => patch('remove', `/todos/data/${x}`, null))
+const saveTitle = on('/ui/todos/data/newTitle/value')
+  .map(x => patch('merge', `/todos/data/${get(`${ui.todos.edit.path}/value`)}`, {
+    title: x,
+    editing: false
+  }))
+
+const clearCompleted = on('/ui/todos/data/clearCompleted/timestamp')
+  .flatten(() => get('/todos/completed'))
+  .map(x => patch('remove', `/todos/data/${x.id}`, null))
 
 Kefir.merge([
   uiPatches,
   newTodo,
+  editTitle,
+  saveTitle,
   destroyTodo,
   toggleTodo,
+  toggleAll,
   clearCompleted
 ]).onAny(state.patch)
 

@@ -2,7 +2,7 @@
 form:
   newTodo:
     data: true
-    type: text
+    type: string
 
 todos:
   toggle:
@@ -10,14 +10,16 @@ todos:
     type: button
   toggleAll:
     data: true
-    type: boolean
-    default: false
+    type: button
   destroy:
     data: true
     type: button
   edit:
     data: true
     type: button
+  newTitle:
+    data: true
+    type: string
   clearCompleted:
     data: true
     type: button

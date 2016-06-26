@@ -21,48 +21,38 @@ const recursiveSet = curry((id, tree, v, k) => {
   }
 })
 
-const dynamicNodes = curry((tree, obj) => {
-  mapObjIndexed(recursiveSet('dynamicNode', tree), obj)
-})
-
-
 let obj = objFromSchema(schema)
 let tree = new Baobab(obj)
 let patches = []
 let patchTimers = {}
 let nodeTimers = {}
 
-let state = {
-  tree: tree,
-  get: cursorGet(tree),
-  exists: cursorExists(tree),
-  patch: patch => {
-    if (patch.type === 'end') {
-      return
-    } else if (patch.type === 'error' || patch.type === 'value') {
-      patch = patch.value
-    }
-    patches.push(patch)
-    state.applyPatch(patch, 'data')
-  },
-  applyPatch: (patch, loc) => {
-    try {
-      if (!patchTimers[loc]) {
-        patchTimers[loc] = []
-      }
-      let t0 = performance.now()
-
-      applyPatch(tree, patch)
-
-      patchTimers[loc].push([new Date().getTime(), performance.now() - t0])
-    } catch (e) {
-      console.error(`[patch apply error] ${loc} -> ${JSON.stringify(patch)}\n${e}`)
-    }
-  },
-  dynamicNodes: dynamicNodes(tree),
-  on: onUpdate(tree),
-  onValue: (jsonPath, fn) => onUpdate(tree, jsonPath).onValue(fn),
-  update: updateView(tree)
+const get = cursorGet(tree)
+const exists = cursorExists(tree)
+const patch = patch => {
+  if (patch.type === 'end') {
+    return
+  } else if (patch.type === 'error' || patch.type === 'value') {
+    patch = patch.value
+  }
+  patches.push(patch)
+  applyPatch(tree, patch)
 }
 
-export default state
+const dynamicNodes = obj => mapObjIndexed(recursiveSet('dynamicNode', tree), obj)
+const on = onUpdate(tree)
+const onValue = (jsonPath, fn) => onUpdate(tree, jsonPath).onValue(fn)
+const data = updateView(tree)
+
+export { get, on }
+
+export default {
+  tree,
+  on,
+  onValue,
+  data,
+  get,
+  exists,
+  patch,
+  dynamicNodes
+}

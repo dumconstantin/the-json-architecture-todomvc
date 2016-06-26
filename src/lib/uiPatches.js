@@ -5,12 +5,14 @@ import bubbleTo from 'lib/bubbleTo'
 import domOn from 'lib/domOn'
 import $ from 'jquery'
 import schema from 'lib/schema'
+import log from 'lib/log'
 
 const patches = Kefir.merge([
     domOn('click', 'a[data-path]'),
     domOn('change', 'input[data-path]'),
     domOn('change', 'select[data-path]'),
-    domOn('click', 'button[data-path]')
+    domOn('click', 'button[data-path]'),
+    domOn('dblclick', 'li[data-path]')
   ])
   .map(preventDefault)
   .map(bubbleTo('[data-path]'))
@@ -30,20 +32,29 @@ const patches = Kefir.merge([
 
     let valType = path(schemaPath, schema)
 
-    console.log(valType, schema, schemaPath)
+    console.log(valType)
+
+    let patch
     if (valType) {
       if ("number" === valType) {
         x.value = defaultTo('', parseFloat(x.value))
       } else if ('boolean' === valType) {
-        x.value = Boolean(x.value)
+        if (x.value === 'true') {
+          x.value = true
+        } else if (x.value === 'false') {
+          x.value = false
+        }
       }
+      patch = createPatch('merge', x.path, {
+        timestamp: new Date().getTime(),
+        value: x.value
+      })
+
+    } else {
+      patch = createPatch('add', x.path, x.value)
     }
 
-    return x
+    return patch
   })
-  .map(x => createPatch('merge', x.path, {
-    timestamp: new Date().getTime(),
-    value: x.value
-  }))
 
 export default patches

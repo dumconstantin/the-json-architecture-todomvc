@@ -8,24 +8,50 @@ console.log(uiSchema)
 
     <header class="header">
       <h1>todos</h1>
-      <input class="new-todo" name="newTodo" data-path="{ schema.form.newTodo.path }" placeholder="What needs to be done?" value="{ data.newTodo }" autofocus>
+      <input
+        class="new-todo"
+        name="newTodo"
+        data-path="{ schema.form.newTodo.path }"
+        placeholder="What needs to be done?"
+        value="{ data.newTodo }"
+        autofocus
+      />
     </header>
 
     <section if={ data.allNo > 0 } class="main">
 
-      <input data-path="{ schema.todos.toggleAll.path }" data-value="{ '' + (!data.toggleAll) }" class="toggle-all" type="checkbox" checked={ data.activeNo === 0 || data.toggleAll }>
+      <input
+        data-path="{ schema.todos.toggleAll.path }"
+        class="toggle-all"
+        type="checkbox"
+        checked={ data.activeNo === 0 }
+      />
       <label for="toggle-all">Mark all as complete</label>
 
       <ul class="todo-list">
-        <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
 
-        <li each={ data.todos } class="{ completed: completed }">
+        <li
+          each={ data.todos }
+          data-path="{ schema.todos.edit.path }"
+          data-value="{ id }"
+          class="{ editing: data.editing === id }  { completed: completed }"
+        >
           <div class="view">
-            <input data-path="{ schema.todos.toggle.path }" data-value="{ id }" class="toggle" type="checkbox" checked={ completed }>
+            <input
+              data-path="{ schema.todos.toggle.path }"
+              data-value="{ id }"
+              class="toggle"
+              type="checkbox"
+              checked={ completed }
+            />
             <label>{ title }</label>
-            <button class="destroy" data-path="{ schema.todos.destroy.path }" data-value="{ id }"></button>
+            <button
+              class="destroy"
+              data-path="{ schema.todos.destroy.path }"
+              data-value="{ id }"
+            ></button>
           </div>
-          <input class="edit" value="{ title }">
+          <input class="edit" data-path="{ schema.todos.newTitle.path }" value="{ title }">
         </li>
 
       </ul>
@@ -38,17 +64,36 @@ console.log(uiSchema)
 
       <ul class="filters">
         <li>
-          <a class="{ selected: data.filter === 'all' }" href="#/" data-path="{ schema.todos.filter.path }" data-value="all">All</a>
+          <a
+            class="{ selected: data.filter === 'all' }"
+            href="#/"
+            data-path="{ schema.todos.filter.path }"
+            data-value="all"
+          >All</a>
         </li>
         <li>
-          <a class="{ selected: data.filter === 'active' }" href="#/active" data-path="{ schema.todos.filter.path }" data-value="active">Active</a>
+          <a
+            class="{ selected: data.filter === 'active' }"
+            href="#/active"
+            data-path="{ schema.todos.filter.path }"
+            data-value="active"
+          >Active</a>
         </li>
         <li>
-          <a class="{ selected: data.filter === 'completed' }" href="#/completed" data-path="{ schema.todos.filter.path }" data-value="completed">Completed</a>
+          <a
+            class="{ selected: data.filter === 'completed' }"
+            href="#/completed"
+            data-path="{ schema.todos.filter.path }"
+            data-value="completed"
+          >Completed</a>
         </li>
       </ul>
 
-      <button if={ data.completedNo !== 0 } data-path="{ schema.todos.clearCompleted.path }" class="clear-completed">Clear completed</button>
+      <button
+        if={ data.completedNo !== 0 }
+        data-path="{ schema.todos.clearCompleted.path }"
+        class="clear-completed"
+      >Clear completed</button>
 
     </footer>
 
@@ -56,8 +101,9 @@ console.log(uiSchema)
 
   this.schema = uiSchema
 
-  state.update(this, {
+  state.data(this, {
     newTodo: '/ui/form/data/newTodo/value',
+    editing: '/todos/editing/id',
     allNo: ['/todos/all', length],
     activeNo: ['/todos/active', length],
     completedNo: ['/todos/completed', length],
