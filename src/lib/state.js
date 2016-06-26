@@ -3,6 +3,7 @@ import { dynamicNode, applyPatch, cursorOn, objFromSchema, cursorGet, cursorExis
 import baobabJsEditor from 'baobab-jsoneditor'
 import schema from 'lib/schema'
 import updateView from 'lib/updateView'
+import nodes from 'schema/nodes'
 
 const onUpdate = curry((state, jsonPath) => {
   return cursorOn(state, 'update', jsonPath)
@@ -27,6 +28,8 @@ let patches = []
 let patchTimers = {}
 let nodeTimers = {}
 
+baobabJsonEditor(tree)
+
 const get = cursorGet(tree)
 const exists = cursorExists(tree)
 const patch = patch => {
@@ -44,7 +47,10 @@ const on = onUpdate(tree)
 const onValue = (jsonPath, fn) => onUpdate(tree, jsonPath).onValue(fn)
 const data = updateView(tree)
 
-export { get, on }
+dynamicNodes(nodes)
+
+
+export { get, on, patch }
 
 export default {
   tree,

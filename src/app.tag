@@ -1,7 +1,6 @@
 var state  = require('./lib/state.js').default
 var uiSchema = require('./lib/uiSchema.js').default
 
-console.log(uiSchema)
 <app>
 
   <section class="todoapp">
@@ -11,7 +10,7 @@ console.log(uiSchema)
       <input
         class="new-todo"
         name="newTodo"
-        data-path="{ schema.form.newTodo.path }"
+        data-path="{ schema.todos.newTodo.path }"
         placeholder="What needs to be done?"
         value="{ data.newTodo }"
         autofocus
@@ -102,7 +101,7 @@ console.log(uiSchema)
   this.schema = uiSchema
 
   state.data(this, {
-    newTodo: '/ui/form/data/newTodo/value',
+    newTodo: '/ui/todos/data/newTodo/value',
     editing: '/todos/editing/id',
     allNo: ['/todos/all', length],
     activeNo: ['/todos/active', length],
