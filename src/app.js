@@ -1,10 +1,11 @@
 import * as Kefir from 'kefir'
 import { createPatch as patch } from 'json-patch-utils'
-import { on, get, default as state } from 'lib/state'
-import randomId from 'lib/randomId'
 import { newTodo, destroy, toggle, toggleValue, toggleAll, edit, editValue, newTitle, clearCompleted } from 'lib/uiPaths'
+import { on, get, default as state } from 'lib/state'
+import uiPatches from 'lib/uiPatches'
+import randomId from 'lib/randomId'
 
-export default Kefir.merge([
+const patches = Kefir.merge([
   on(newTodo)
     .filter(pipe(isEmpty, not))
     .map(x => ({
@@ -41,3 +42,9 @@ export default Kefir.merge([
     .flatten(() => get('/todos/completed'))
     .map(x => patch('remove', `/todos/data/${x.id}`, null))
 ])
+
+patches.onValue(state.patch)
+uiPatches.onValue(state.patch)
+
+require('./app.tag')
+riot.mount('#app', 'app')

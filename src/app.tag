@@ -1,6 +1,3 @@
-var state  = require('./lib/state.js').default
-var uiSchema = require('./lib/uiSchema.js').default
-
 <app>
 
   <section class="todoapp">
@@ -98,7 +95,8 @@ var uiSchema = require('./lib/uiSchema.js').default
 
   </section>
 
-  this.schema = uiSchema
+  this.schema = require('./../lib/uiSchema.js').default
+  let state  = require('./../lib/state.js').default
 
   state.data(this, {
     newTodo: '/ui/todos/data/newTodo/value',
@@ -112,4 +110,3 @@ var uiSchema = require('./lib/uiSchema.js').default
   })
 
 </app>
-

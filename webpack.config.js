@@ -7,7 +7,7 @@ module.exports = {
       `webpack-dev-server/client?http://localhost:3000`,
       'webpack/hot/dev-server'
     ],
-    app: [__dirname + '/src/entry.js'],
+    app: [__dirname + '/src/app.js'],
     vendor: [
       'jquery',
       'riot',
@@ -49,7 +49,7 @@ module.exports = {
       'node_modules'
     ],
     alias: {
-      lib: __dirname + '/src/lib',
+      lib: __dirname + '/lib',
       schema: __dirname + '/src/schema'
     },
     extensions: ['', '.js', '.yaml', '.tag']
@@ -61,7 +61,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
         inject: false,
-        template: __dirname + '/src/assets/index.ejs',
+        template: __dirname + '/index.ejs',
         mobile: true,
         baseHref: 'localhost',
         appMountId: 'app',
