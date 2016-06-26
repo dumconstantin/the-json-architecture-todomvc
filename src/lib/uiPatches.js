@@ -32,8 +32,6 @@ const patches = Kefir.merge([
 
     let valType = path(schemaPath, schema)
 
-    console.log(valType)
-
     let patch
     if (valType) {
       if ("number" === valType) {

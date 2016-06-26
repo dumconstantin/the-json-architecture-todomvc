@@ -2,11 +2,10 @@ import * as Kefir from 'kefir'
 import { createPatch as patch } from 'json-patch-utils'
 import { on, get, default as state } from 'lib/state'
 import randomId from 'lib/randomId'
-import log from 'lib/log'
+import { newTodo, destroy, toggle, toggleValue, toggleAll, edit, editValue, newTitle, clearCompleted } from 'lib/uiPaths'
 
 export default Kefir.merge([
-
-  on('/ui/todos/data/newTodo/value')
+  on(newTodo)
     .filter(pipe(isEmpty, not))
     .map(x => ({
       id: randomId(),
@@ -16,36 +15,29 @@ export default Kefir.merge([
     }))
     .map(x => [
       patch('add', `/todos/data/${x.id}`, x),
-      patch('replace', '/ui/todos/data/newTodo/value', '')
+      patch('replace', newTodo, '')
     ]),
-
-  on('/ui/todos/data/destroy/value')
+  on(destroy)
     .map(x => patch('remove', `/todos/data/${x}`, null)),
-
-  on('/ui/todos/data/toggle/timestamp')
-    .map(() => `/todos/data/${get('/ui/todos/data/toggle/value')}/completed`)
+  on(toggle)
+    .map(() => `/todos/data/${get(toggleValue)}/completed`)
     .map(x => patch('replace', x, not(get(x)))),
-
-  on('/ui/todos/data/toggleAll/timestamp').map(() => ({
+  on(toggleAll).map(() => ({
       todos: map(prop('id'), get('/todos/all')),
       status: not(get('/todos/isDone'))
     }))
     .map(x => map(id => patch('replace', `/todos/data/${id}/completed`, x.status), x.todos)),
-
-  on('/ui/todos/data/edit/timestamp')
-    .map(() => get('/ui/todos/data/edit/value'))
+  on(edit)
+    .map(() => get(editValue))
     .map(x => patch('replace', `/todos/data/${x}/editing`, true)),
-
-  on('/ui/todos/data/newTitle/value')
+  on(newTitle)
     .map(x => ({
-      id: get('/ui/todos/data/edit/value'),
+      id: get(editValue),
       title: x,
       editing: false
     }))
     .map(x => patch('merge', `/todos/data/${x.id}`, x)),
-
-  on('/ui/todos/data/clearCompleted/timestamp')
+  on(clearCompleted)
     .flatten(() => get('/todos/completed'))
     .map(x => patch('remove', `/todos/data/${x.id}`, null))
-
 ])

@@ -17,4 +17,4 @@ properties:
                 type: string
               completed:
                 type: boolean
-            required: [name, completed]
+            required: [id, title, completed]
