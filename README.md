@@ -1,2 +1,2 @@
 # the-json-architecture-todomvc
-A list of helpers for making the TodoMVC
+Just run ``` npm install && npm start ``` and check http://localhost:3000
